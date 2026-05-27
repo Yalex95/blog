@@ -1,0 +1,23 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "Mi primer post",
+      "content": "Contenido...",
+      "status": "published",
+      "authorId": "user1",
+      "createdAt": "2024-01-01",
+      "tags": ["react", "typescript"]
+    }
+  ],
+  "users": [
+    {
+      "id": "user1",
+      "name": "Admin",
+      "email": "admin@blog.com",
+      "password": "admin123"
+    }
+  ],
+  "comments": [],
+  "categories": []
+}
