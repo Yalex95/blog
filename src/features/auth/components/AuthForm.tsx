@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail } from "@mui/icons-material";
 import {
   Box,
@@ -9,21 +10,29 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import type React from "react";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { loginSchema, type LoginFormData } from "../../../schemas/authSchema";
 import "../styles/authStyles.css";
 
 interface AuthFormProps {
-  children?: React.ReactNode;
   title: string;
   subtitle: string;
 }
 
-export default function AuthForm({ children, subtitle, title }: AuthFormProps) {
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    console.log("auth form");
-  }
+export default function AuthForm({ subtitle, title }: AuthFormProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = (data: LoginFormData) => {
+  
+    console.log(data);
+  };
   return (
     <>
       <Paper elevation={2}>
@@ -37,13 +46,16 @@ export default function AuthForm({ children, subtitle, title }: AuthFormProps) {
           <Stack
             component="form"
             spacing={3}
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             sx={{ mt: 5 }}
           >
-            {children}
             <TextField
               label="Email"
               type="email"
+              {...register("email")}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+              autoComplete="username"
               slotProps={{
                 input: {
                   startAdornment: (
@@ -57,6 +69,9 @@ export default function AuthForm({ children, subtitle, title }: AuthFormProps) {
             <TextField
               label="Pasword"
               type="password"
+              {...register("password")}
+              error={!!errors.password}
+              helperText={errors.password?.message}
               autoComplete="current-password"
               slotProps={{
                 input: {
