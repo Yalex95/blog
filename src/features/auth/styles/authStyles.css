@@ -1,4 +1,4 @@
 @import "tailwindcss";
 .form__auth {
-  @apply p-8 border border-gray-100 shadow;
+  @apply p-8 border border-gray-200 shadow rounded-lg bg-white;
 }
