@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail } from "@mui/icons-material";
 import {
+  Alert,
   Box,
   Button,
   Divider,
@@ -10,9 +11,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginSchema, type LoginFormData } from "../../../schemas/authSchema";
+import { loginUser } from "../services/auth.service";
 import "../styles/authStyles.css";
 
 interface AuthFormProps {
@@ -21,17 +24,42 @@ interface AuthFormProps {
 }
 
 export default function AuthForm({ subtitle, title }: AuthFormProps) {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormData) => {
-  
-    console.log(data);
+  const [isLoading, setIsLoading] = useState(false);
+  const onSubmit = async (data: LoginFormData) => {
+    setIsLoading(true);
+    clearErrors();
+
+    try {
+      const users = await loginUser(data.email, data.password);
+
+      if (users.length === 0) {
+        setError("root", {
+          message: "Invalid credentials",
+        });
+        setIsLoading(false);
+        return;
+      }
+      //
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+    } catch (error) {
+      setError("root", {
+        message: `Server error: ${error}`,
+      });
+      setIsLoading(false);
+    }
   };
   return (
     <>
@@ -49,6 +77,11 @@ export default function AuthForm({ subtitle, title }: AuthFormProps) {
             onSubmit={handleSubmit(onSubmit)}
             sx={{ mt: 5 }}
           >
+            {errors.root?.message && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {errors.root.message}
+              </Alert>
+            )}
             <TextField
               label="Email"
               type="email"
@@ -88,6 +121,7 @@ export default function AuthForm({ subtitle, title }: AuthFormProps) {
               color="primary"
               variant="contained"
               size="large"
+              loading={isLoading}
             >
               login
             </Button>
