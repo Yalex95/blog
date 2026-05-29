@@ -14,6 +14,12 @@ export const theme = createTheme({
       dark: "#0F172A",
       contrastText: "#FFFFFF",
     },
+    neutral: {
+      main: "#F9FAFB",
+      light: "#FFFFFF",
+      dark: "#E5E7EB",
+      contrastText: "#111827",
+    },
   },
   typography: {
     fontFamily: '"Source Serif Four", "Source Serif Pro", Georgia, serif',

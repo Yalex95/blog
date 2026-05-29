@@ -2,7 +2,7 @@ import Login from "./pages/Login";
 
 export const authRoutes = [
   {
-    path: "/sign-in",
+    path: "/login",
     element: <Login />,
   },
 ];

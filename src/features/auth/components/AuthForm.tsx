@@ -33,6 +33,10 @@ export default function AuthForm({ subtitle, title }: AuthFormProps) {
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "admin@blog.com",
+      password: "admin123",
+    },
   });
 
   const [isLoading, setIsLoading] = useState(false);
